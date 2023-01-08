@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useEffect, useState } from "react";
+import {userName, userAge} from "./components/TestContext";
+import { TestEffect } from "./components/TestEffect";
+import TestMenoParent from "./components/TSpropsTest";
+import TestState from "./components/TestState";
+import TestMemoParentent from "./components/TestMemo";
+import TestRef from "./components/TestRef";
 
-function App() {
+const App = () => {
+
+  const name = useContext(userName);
+  const age = useContext(userAge);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <React.Fragment>
+    <TestState/>
+    <TestEffect/>
+    <userAge.Provider value={age} />
+    <userName.Provider value={name}>
+      <h2 style={{color:'blue'}}>useContext</h2>
+      {name}
+      {age}
+    </userName.Provider>
+    <TestMenoParent/>
+    <TestMemoParentent/>
+    <TestRef/>
+    </React.Fragment>
+  )
 }
-
 export default App;
