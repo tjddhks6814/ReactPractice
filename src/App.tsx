@@ -5,6 +5,8 @@ import TestMenoParent from "./components/TSpropsTest";
 import TestState from "./components/TestState";
 import TestMemoParentent from "./components/TestMemo";
 import TestRef from "./components/TestRef";
+import TestAxios from "./components/TestAxios";
+
 
 const App = () => {
 
@@ -24,6 +26,7 @@ const App = () => {
     <TestMenoParent/>
     <TestMemoParentent/>
     <TestRef/>
+    <TestAxios />
     </React.Fragment>
   )
 }

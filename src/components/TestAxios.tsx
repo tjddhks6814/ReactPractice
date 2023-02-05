@@ -27,46 +27,37 @@ useEffect(() => {
     })
 },[])
 
-useEffect(() => {
+//useEffect(() => {
     /* 
         axios post로 데이터 추가
-    
+    */
+   const pushData = () => {
     axios.post(url,{
-        id: 5,
-        title: "test2",
-        body: "axios post test2"
+        id: 7,
+        title: "data7",
+        body: "axios post check7"
     }).then(response => {
         console.log(response)
     })
-    */
-},[])
+   }
+    
+//},[])
 
-useEffect(() => {
+//useEffect(() => {
     /* 
         axios put으로 데이터 수정
-    
-    axios.put(url+'?id=5',{
-        title: "test recheck"
+    */
+   const changeData =() => {
+    axios.put(url+'/7',{
+        id:7,
+        title: "test recheck",
+        body:"post success"
     }).then(response => {
         console.log(response)
     })
-    */
-},[])
-
-/*
-useEffect(() => {
+   }
     
-    /* 
-        axios delete로 특정 데이터 삭제
-    
-    axios.delete(url,{
-    }).then(res => {
-       console.log(res.status)
-    }).catch(error =>{
-        console.log(error)
-    })
-},[])
-*/
+//},[])
 const idMap = data.filter((el) => {
     return el.id 
 })
@@ -80,19 +71,15 @@ const clickId = (e:any) => {
         console.log(error)
     })
     */
+   const val = e.target.value;
    e.preventDefault();
-    return axios.delete(url+`?id=${e.target.value}`,{
+    return axios.delete(url+`/${val}`,{
         headers: {
             'Content-Type': `application/json`,
           },
-        data:{
-            ...data[5]
-        }
     }
     ).then(res => {
-        const del = data.filter((el) => e.target.value !== el.id)
-        setData(del)
-        console.log(res.data)
+        return res.data
     }).then(error => {
         console.log(error)
     });
@@ -108,6 +95,8 @@ return (
                 <li key={data.id}>{data.title}</li>
             ))
         }
+        <button onClick={changeData}>데이터 변경</button>
+        <button onClick={pushData}>데이터 추가</button>
     </React.Fragment>
 )
 }
