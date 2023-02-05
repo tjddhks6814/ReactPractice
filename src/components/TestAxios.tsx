@@ -27,11 +27,10 @@ useEffect(() => {
     })
 },[])
 
-//useEffect(() => {
-    /* 
-        axios post로 데이터 추가
-    */
-   const pushData = () => {
+/* 
+    axios post로 데이터 추가
+*/
+const pushData = () => {
     axios.post(url,{
         id: 7,
         title: "data7",
@@ -39,15 +38,12 @@ useEffect(() => {
     }).then(response => {
         console.log(response)
     })
-   }
+}
     
-//},[])
-
-//useEffect(() => {
-    /* 
-        axios put으로 데이터 수정
-    */
-   const changeData =() => {
+/* 
+    axios put으로 데이터 수정
+*/
+const changeData =() => {
     axios.put(url+'/7',{
         id:7,
         title: "test recheck",
@@ -55,22 +51,13 @@ useEffect(() => {
     }).then(response => {
         console.log(response)
     })
-   }
+}
     
-//},[])
 const idMap = data.filter((el) => {
     return el.id 
 })
 
 const clickId = (e:any) => {
-    /*
-    axios.delete(url+e.target.value,{
-    }).then(res => {
-       console.log(res.status)
-    }).catch(error =>{
-        console.log(error)
-    })
-    */
    const val = e.target.value;
    e.preventDefault();
     return axios.delete(url+`/${val}`,{
