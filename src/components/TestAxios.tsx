@@ -1,5 +1,6 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
+import { useQuery } from "react-query";
 
 interface reData{
     id: number,
@@ -11,7 +12,7 @@ const TestAxios = () =>{
 const [data, setData] = useState<reData[]>([]);
 const url = 'http://localhost:4000/testAxios'; 
 
-useEffect(() => {
+//useEffect(() => {
     /* 
     파라미터 메소드를 사용하여 특정값만 받아올 수 있음
     get(url, {
@@ -20,12 +21,14 @@ useEffect(() => {
         }
     })
     */
+   const GetData = async () => {
     axios.get(url).then(response => {
         setData(response.data)
-    }).catch(error => {
-        console.log(error)
     })
-},[])
+        //return await setData()
+    }
+
+//},[])
 
 /* 
     axios post로 데이터 추가
@@ -36,7 +39,6 @@ const pushData = () => {
         title: "data7",
         body: "axios post check7"
     }).then(response => {
-        console.log(response)
     })
 }
     
@@ -49,7 +51,6 @@ const changeData =() => {
         title: "test recheck",
         body:"post success"
     }).then(response => {
-        console.log(response)
     })
 }
     
@@ -68,10 +69,11 @@ const clickId = (e:any) => {
     ).then(res => {
         return res.data
     }).then(error => {
-        console.log(error)
     });
         
-}  
+}
+
+useQuery('axiosData', GetData, {suspense:true});
 
 
 return (
