@@ -6,6 +6,8 @@ import TestState from "./components/TestState";
 import TestMemoParentent from "./components/TestMemo";
 import TestRef from "./components/TestRef";
 import TestAxios from "./components/TestAxios";
+import TestCallBack from "./components/TestCallBackSub";
+import TestCallBackMain from "./components/TestCallBackMain";
 
 
 const App = () => {
@@ -27,6 +29,8 @@ const App = () => {
     <TestMemoParentent/>
     <TestRef/>
     <TestAxios />
+    <TestCallBack />
+    <TestCallBackMain />
     </React.Fragment>
   )
 }
