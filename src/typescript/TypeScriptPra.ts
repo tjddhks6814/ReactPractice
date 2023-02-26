@@ -1,4 +1,4 @@
-const TypeScript = () => {
+const TypeScript:any = () => {
     const a:number = 5;
     const b:string = "5";
     const c:boolean = true;
@@ -41,6 +41,9 @@ const TypeScript = () => {
     // !의 역할 null이나 undefined가 존재하지 않는다고 확신이 들 때 사용
     // 사용은 비추 에일리언코드가 될 수 있음 
     const head:Element|null = document.querySelector("#head");
+    if(head){
+        head.innerHTML = 'hello world';
+    }
 }
 
 export default TypeScript

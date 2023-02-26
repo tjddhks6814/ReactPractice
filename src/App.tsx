@@ -8,6 +8,7 @@ import TestRef from "./components/TestRef";
 import TestAxios from "./components/TestAxios";
 import TestCallBack from "./components/TestCallBackSub";
 import TestCallBackMain from "./components/TestCallBackMain";
+import TypeScript from "./typescript/TypeScriptPra";
 
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
     <TestAxios />
     <TestCallBack />
     <TestCallBackMain />
+    <TypeScript />
     </React.Fragment>
   )
 }
