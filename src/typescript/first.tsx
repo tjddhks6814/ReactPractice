@@ -218,3 +218,120 @@ const secondType = () => {
         }
     }
  }
+
+ const customType = async () => {
+    interface Cat{ meow: number };
+    interface Dog{ bow: number };
+    // 커스텀 함수
+    // is가 있으면 TypeGuard이다
+    function catOrDog(a: Cat | Dog): a is Dog {
+        // 타입 반변을 직접 만들 수 있다.
+        // Dog면 meow가 없어야 한다.
+        if((a as Cat).meow) { return false }
+        return true;
+    }
+    // is는 Type을 구분해주는 커스텀 함수를 직접 만들 수 있다.
+    const cat: Cat | Dog = { meow: 3 }
+        if(catOrDog(cat)){
+            console.log(cat.meow)
+        }
+        if('meow' in cat){
+            console.log(cat.meow)
+        }
+    function pet(a: Cat | Dog){
+        if(catOrDog(a)){
+            console.log(a.bow)
+        }
+        if('meow' in a){
+            console.log(a.meow)
+        }
+    }
+
+    const isRejected = (input : PromiseSettledResult<unknown>): input is PromiseRejectedResult => {
+        return input.status === 'rejected'
+    }
+    // React에서는 JSX에서 구별을 못할 수 있어서 기본값을 넣어주는게 좋음
+    const isFulFailed = <T extends unknown>(input : PromiseSettledResult<T>): input is PromiseFulfilledResult<T> => {
+        return input.status === 'fulfilled'
+    }
+
+    //PromiseSettledResult, PromiseFulfilledResult
+    //Promise -> Pending -> Settled(Resolved, Rejected)
+    //promise.then().catch()
+
+    const promise = await Promise.allSettled([Promise.resolve('a'), Promise.resolve('b')]);
+    const errors = promise.filter(isFulFailed);
+
+    // 4.8ver은 unknown을 if에 넣으면 모든 값을 받는다
+    // {} 모든 타입을 가르키지만 null | undefined는 받지 않음
+ }
+
+ const infaceType = () => {
+    interface A {
+        readonly a: string,
+        b: string
+    }
+    const aaa: A = {a: 'hello', b: 'world'};
+
+    // 인덱스 시그니쳐 모든 값을 통일하고 싶을 때 사용
+    // 또는 쓸떄는 무조건 type으로 써야함
+    type C = 'Human' | 'Mamal' | 'Animal';
+    // key값이 3개중에 하나 였으면 좋겠다 할 때 in으로 사용
+    // 제한을 둬서 더 정확한 타입을 정한다 '맵드타입'
+    type B = {[key in C]: number};
+ }
+
+ const classType = () => {
+    interface A {
+        readonly a: string;
+        b: string;
+    }
+    // interface는 추상이고 class는 구현이다
+    // class는 class자체가 타입이다
+    class B implements A {
+        // 접근 할 수 없게 만드는 속성 해당 클래스 안에서만 써야한다.
+        //private a: string = '123';
+        a: string = '123';
+        //protected b: string = 'world';
+        b: string = 'world';
+    }
+    class C extends B {}
+    //new C().a;
+    //new C().b;
+
+    //            public protected private
+    // 클래스내부        o       o       o
+    // 인스턴스         o        x      x
+    // 상속클래스        o       o       x
+}
+
+const optional = () => {
+    // ?는 있어도 되고 없어도 되는 값
+    // ?는 항상 속성명 뒤에 붙인다
+    function abc(a: number, b?:number, c?:number){}
+    abc(1)
+    abc(1,2)
+    abc(1,2,3)
+
+    let obj: { a: string, b?:string } = {a: 'hi', b: ''};
+    obj = { a: 'hello'}
+}
+
+const generic = () => {
+    // 제네릭은 주로 함수명 옆에 붙인다.
+    // 사용할 때 타입을 정해주면 된다.
+    // extends로 제한을 둘 수 있음 
+    // 제네릭을 여러개 동시에 만들면서 각각 다른 제한을 둘 수 있음
+    // <T extends number | string, K extends string>
+
+    // extends 종류
+    // <T extends {...}>
+    // <T extends any[]>
+    // <T extends (...args:any) => any> '이런 형식은 callback함수에 많이 씀'
+    // <T extends abstract new (...args:any) => any>  '생성자만 뽑고 싶을 떼'
+    function add<T extends number | string, K extends string | number>( x: T, y: K): T { return x }
+    // TS는 T가 뭔지 몰라서 오류가 남
+    // 함수를 사용할 때 타입일 정해질 수 있도록
+    add(1, 2)
+    add('1', '2')
+}
