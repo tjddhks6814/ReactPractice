@@ -1,3 +1,5 @@
+import { NumberLiteralType } from "typescript";
+
 const First = () => {
     type world = 'world' | 'hell';
     const a:world = 'world';
@@ -334,4 +336,53 @@ const generic = () => {
     // 함수를 사용할 때 타입일 정해질 수 있도록
     add(1, 2)
     add('1', '2')
+
+    // 실전에서 자주쓰는 Generic
+    // forEach
+    interface Array<T>{
+        forEach(callbackfn: (value: T, index:number, array: T[]) => void, thisArg?: any): void;
+        map<U>(callbackfn: (value:T, index:number, array: T[]) => U, thisArg?: any): U[];
+        filter<S extends T>(predicate:(value:T, index:number, array: T[]) => value is S, thisArg?: any): string[];
+    }
+    
+    // Generic이 있어서 알아서 추론을 해준다
+    // 타입이 정해지면 모든걸 그 타입으로 반영한다
+    // <T>자리에 <number>로 직접 넣어 줘도 된다 이 경우는 TS가 못알아 먹을 때 주로 사용
+    // <number>a이런식으로 넣으면 강제지정이라서 위치를 유의하면서 반영
+    // forEach와 map은 값의 위치가 중요한 위치룰 통해 타입을 정해주는게 좋음
+    const a:Array<number> = [1, 2, 3];
+    [1, 2, 3].forEach((value) => {return value});
+    ['1', '2', '3'].forEach((value) => {return value});
+    [true, false, true].forEach((value) => {return value});
+    ['1', 2, '3'].forEach((value) => {return value});
+
+    const strings = [1, 2, 3].map((el) => el.toString());
+    const numbers = ['1', '2', '3'].map((el) => Number(el));
+    
+    const filterNum = [1, 2, 3].filter((el) => el % 2);
+    // string | number로 추론 할 때에는 이런식으로 predicate를 빼서 따로 만들어 주는게 나음
+    const predicate = (el: string | number): el is string => typeof el === 'string'
+    const filterString = [1, '2', 3, '4'].filter(predicate);
+}
+
+const customArrayType = () => {
+    interface Arr<T> {
+        forEach(callback: (item: T, index:number) => void): void;
+        map<S>(callback:(item: T) => S): S[];
+        filter<S extends T>(callback:(item : T) => item is S): S[];
+    }
+    const a:Arr<number> = [1,2,3];
+    a.forEach((item) => item.toFixed(1));
+    
+    const b:Arr<string> = ['1', '2', '3'];
+    b.forEach((item) => item.charAt(3));
+
+    const c:Arr<number> = [1,2,3];
+    const numMap = c.map((item) => item % 2);
+    const strMap = c.map((item) => item.toString());
+    const strA = c.map((item) => item % 2 === 0);
+
+    const d = a.filter((item):item is number => item % 2 === 0);
+    const e:Arr<number | string> = [1, 2,'3',4,'5'];
+    const filterS = e.filter((el): el is string => typeof el === 'string');
 }
