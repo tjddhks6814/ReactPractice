@@ -1,3 +1,4 @@
+import { profile } from "console";
 import { NumberLiteralType } from "typescript";
 
 const First = () => {
@@ -385,4 +386,134 @@ const customArrayType = () => {
     const d = a.filter((item):item is number => item % 2 === 0);
     const e:Arr<number | string> = [1, 2,'3',4,'5'];
     const filterS = e.filter((el): el is string => typeof el === 'string');
+}
+
+const utilityType = () => {
+    interface profile {
+        name: string,
+        age: number,
+        married: boolean
+    }
+
+    interface profileOp {
+        name?: string,
+        age?: number,
+        married?: boolean
+    }
+
+    const marryChk: profile = {
+        name: 'ssw',
+        age: 28,
+        married: false
+    };
+    type name = profile['name'];
+
+    // 이게 Partial을 Type형태로 만든 것
+    type P<T> = {
+        // profile의 키를 다 꺼내서 옵셔널 처리를 함
+        [Key in keyof T]?: T[Key];
+    }
+
+    //Partial은 type을 Optional로 변경해줌 ?을 넣어준다
+    const newChk: P<profile> = {
+        name: 'ssw',
+        age: 28
+    }
+
+    // Generic간의 제한조건을 붙여주는게 먼저다
+    type Pi<T, S extends keyof T> = {
+        [Key in S]: T[Key];
+    }
+    // Pick은 적어둔 속성만 사용하는 것
+    const originalPick: Pi<profile, 'name' | 'age'> = {
+        name: 'ssw',
+        age: 28
+    }
+
+    const methodPick: Pick<profile, 'name' | 'age'> = {
+        name: 'ssw',
+        age: 28
+    }
+
+    // Omit을 풀어서 만들면
+    type Om = Exclude<keyof profile, 'married'>
+    type Omi<T,S extends keyof any> = Pick<T, Exclude<keyof T, S>>
+
+    // S extends keyof any -> S는 string number symbol만 들어 올 수 있게 제한
+    // Omit은 적어둔 속성을 지우는 것
+    const methodOmot: Omit<profile, 'name' | 'age'> = {
+        married: true
+    }
+
+    type nameRe = profile['name'];
+    // Required를 풀어 놓은 것
+    type R<T> = {
+        // -?은 Optional을 전부 제거하라는 뜻
+        [Key in keyof T]-?: T[Key]
+    }
+
+    // Required는 특정 조건을 넣어서 값을 제거 하고 가져오는 것
+    // ex) -? -> 옵셔널을 제거하고 가져와라
+    const required: Required<profileOp> = {
+        name: 'ssw',
+        age: 28,
+        married: false
+    }
+
+    // Readonly는 수정 못하게 막는 것
+    const requiredRedaonly: Readonly<profileOp> = {
+        name: 'ssw',
+        age: 28,
+        married: false
+    }
+
+    interface obj {
+        [key: string]: number;
+    }
+    type RecordObj<T extends keyof any, S> = {
+        [Key in T]: S;
+    }
+    const recordObj: Record<string, number> = {
+        a: 3,
+        b: 3,
+        c: 4
+    }
+
+    type arr = string | null | number | boolean;
+    type n = NonNullable<arr>
+
+    type N<T> = T extends null | undefined ? never : T; // string | number | boolean
+
+    const typeInfer = () => {
+        function zip(x: number, y: string, z:boolean): {x:number, y:string, z:boolean}{
+            return {x, y, z}
+        }
+        // infer은 extends에서만 사용 할 수 있음
+        // infer은 추론하다라는 뜻
+        type P<T extends (...args:any) => T > = T extends (...args: infer A) => any ? A : never;
+        // Return type을 가져오는 방법
+        type R<T extends (...args:any) => T > = T extends (...args: any) => infer A ? A : never;
+        // type도 배열처럼 접근 할 수 있다
+
+        //type Params = Parameters<typeof zip>
+        type Params = Parameters<typeof zip>;
+        type Ret = ReturnType<typeof zip>;
+        type first = Params[0];
+        /*
+        class A {
+            a: string;
+            b: number;
+            c: boolean;
+            constructor(a: string, b: number, c:boolean){
+                this.a : a;
+                this.b : b;
+                this.c : c;
+            }
+        }
+        const c = new A('123', 456, true); // instance는 new로 새로 만들었을 떼 사용
+        type C = ConstructorParameters<typeof A>
+
+        // class는 type으로 바로 쓸 수 있다
+        */
+    }
 }
