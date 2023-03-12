@@ -516,4 +516,41 @@ const utilityType = () => {
         // class는 type으로 바로 쓸 수 있다
         */
     }
+
+    const proimseAll = () => {
+        const p1 = Promise.resolve(1).then((a) => a + 1).then((a) => a + 1).then((a) => a.toString());
+        // Promise<number>, Promise<number>, Promise<number>, Promise<string>
+        const p2 = Promise.resolve(2); // Promise<number>
+        const p3 = new Promise((res, re) => {
+            // Promise<unknown>
+            setTimeout(res, 1000);
+        })
+
+        // Awaited는 최종적으로 정해진 type을 뱉어주는 역할
+        type Result = Awaited<Promise<Promise<Promise<number>>>>;
+
+        Promise.all([p1, p2, p3]).then((result) => {
+            // ('0', string, '1',number, '2', unknown length)
+            console.log(result) // ['3', 2, undefined]
+        })
+        // 배열이라서 자기 length까지만 가능
+        // keyof T = '0' | '1' | '2' | 'length'
+    }
+
+    const bindFunc = () => {
+        function a(this: Window | typeof obj, param:string) {
+            console.log(this.name)
+        }
+
+        const obj = {name : 'ssw'};
+        const b = a.bind(obj);
+        //b();
+        
+        type T = ThisParameterType<typeof a>
+        type NoThis = OmitThisParameter<typeof a>
+
+        // bind type형식은 5개이상 안만들어둠 
+        // 대부분 5개 이상의 함수형식은 존재하지 않음
+
+    }
 }
